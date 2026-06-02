@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -35,7 +38,7 @@ public class Demo6 {
 			}
 		}
 		
-//		3
+//		3)wap to display the names,dno of the emp if the emp is working in dept
 		System.out.println("--------------3------------");
 		Predicate<Emp>p3 =(e)->e.dno  ==  113;
 		for (Emp e:empData) {
@@ -43,17 +46,39 @@ public class Demo6 {
 				System.out.println(e.dno+" "+ e.fname+" "+e.lname);
 			}
 		}
-//		4
+//		4)wap to the emp fname and lname if the emp fname length exceeds 4 
 		System.out.println("--------------4------------");
-		Predicate<Emp>p4 =(e)->e.dno  ==  113;
+		Predicate<Emp>p4 =(e)->e.fname.length() >4;
 		for (Emp e:empData) {
 			if(p4.test(e)) {
-				System.out.println(e.dno+" "+ e.fname+" "+e.lname);
+				System.out.println( e.fname+" "+e.lname);
 			}
 		}
 		
+		//5)wap to display the deatails (entire emp obj) if the emp is not working as ceo
+		System.out.println("--------------5------------");
+		Predicate<Emp>p5 =(e)->e.job !="ceo";
+		for (Emp e:empData) {
+			if(p5.test(e)) {
+				System.out.println( e.fname+" "+e.lname);
+			}
+		}
 		
-
+		Consumer<Emp> c=(e)-> System.out.println(e);
+		c.accept(new Emp(1,"Raju","patidar","developer", 2000.0,13));
+		Consumer <String> c1=(a)-> System.out.println(a.length());
+		c1.accept("vijay");
+		
+		Supplier<Emp> s=()->empData.get(0);
+		Emp emp_first_data=s.get();
+		System.out.println(emp_first_data);
+		
+		Supplier<String>s1=()->"mityraju has huge fan following";
+		System.out.println(s1.get());
+		
+		Function<String,Integer> f=(name)->name.length();
+		Integer leng=f.apply("ankita");
+		System.out.println(leng);
 	}
 
 }
@@ -73,7 +98,14 @@ public class Demo6 {
 	this.job=job;
 	this.sal=sal;
 	this.dno=dno;
+	
 }
+
+	@Override
+	public String toString() {
+		return "Emp [eid=" + eid + ", fname=" + fname + ", lname=" + lname + ", job=" + job + ", sal=" + sal + ", dno="
+				+ dno + "]";
+	}
  }
 class DataFromDb{
 	public static List<Emp> getAllEmps(){
